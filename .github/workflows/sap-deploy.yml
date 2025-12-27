@@ -14,12 +14,21 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Deploy to SAP BTP
-        uses: citizen-of-cosmos/cf-cli-action@master
-        with:
-          cf_api: ${{ secrets.CF_API_URL }}
-          cf_org: ${{ secrets.CF_ORG }}
-          cf_space: ${{ secrets.CF_SPACE }}
-          cf_username: ${{ secrets.CF_USERNAME }}
-          cf_password: ${{ secrets.CF_PASSWORD }}
-          command: push khallaoui-sap-app -p . -m 64M --random-route -b staticfile_buildpack
+      # Étape 1 : Installer l'outil CF CLI officiel (plus fiable)
+      - name: Install Cloud Foundry CLI
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf8-cli
+
+      # Étape 2 : Se connecter et Déployer
+      - name: Deploy
+        run: |
+          # Connexion à SAP BTP
+          cf api ${{ secrets.CF_API_URL }}
+          cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
+          cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
+          
+          # Envoi de l'application
+          cf push khallaoui-sap-app -p . -m 64M --random-route -b staticfile_buildpack
