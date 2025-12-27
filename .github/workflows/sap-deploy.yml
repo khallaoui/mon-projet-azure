@@ -14,24 +14,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Étape 1 : Installer l'outil CF CLI officiel
-      - name: Install Cloud Foundry CLI
+      # Installer l'outil SAP
+      - name: Install CF CLI
         run: |
           wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
           echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
           sudo apt-get update
           sudo apt-get install cf8-cli
 
-      # Étape 2 : Se connecter et Déployer
+      # Déployer (Le manifest.yml fait tout le travail)
       - name: Deploy
         run: |
-          # Connexion à SAP BTP
           cf api ${{ secrets.CF_API_URL }}
           cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
           
-          # Envoi de l'application
-          # Changement ici : J'ai enlevé --random-route
-          # J'ai ajouté -k 128M (limite disque) pour économiser le quota
-          # J'ai renommé l'app pour être sûr qu'elle soit unique
-          cf push khallaoui-app-final -p . -m 64M -k 128M -b staticfile_buildpack
+          # La commande est maintenant très simple
+          cf push
