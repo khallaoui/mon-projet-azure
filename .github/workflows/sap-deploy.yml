@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Installer l'outil SAP
+      # 1. Installer l'outil
       - name: Install CF CLI
         run: |
           wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
@@ -22,12 +22,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install cf8-cli
 
-      # Déployer (Le manifest.yml fait tout le travail)
+      # 2. Déployer avec les ordres directs
       - name: Deploy
         run: |
+          # Connexion
           cf api ${{ secrets.CF_API_URL }}
           cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
           
-          # La commande est maintenant très simple
-          cf push
+          # COMMANDE DIRECTE (Plus besoin de fichier manifest.yml)
+          # -p . : Prends le dossier courant
+          # -m 64M : Petite mémoire
+          # -b staticfile_buildpack : C'est un site HTML
+          # khallaoui-succes-2025 : Nom UNIQUE pour éviter le conflit
+          cf push khallaoui-succes-2025 -p . -m 64M -k 128M -b staticfile_buildpack
