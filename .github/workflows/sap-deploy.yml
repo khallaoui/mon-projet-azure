@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Étape 1 : Installer l'outil CF CLI officiel (plus fiable)
+      # Étape 1 : Installer l'outil CF CLI officiel
       - name: Install Cloud Foundry CLI
         run: |
           wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
@@ -31,4 +31,7 @@ jobs:
           cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
           
           # Envoi de l'application
-          cf push khallaoui-sap-app -p . -m 64M --random-route -b staticfile_buildpack
+          # Changement ici : J'ai enlevé --random-route
+          # J'ai ajouté -k 128M (limite disque) pour économiser le quota
+          # J'ai renommé l'app pour être sûr qu'elle soit unique
+          cf push khallaoui-app-final -p . -m 64M -k 128M -b staticfile_buildpack
