@@ -1,0 +1,27 @@
+name: Deploiement Azure
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Récupérer le code
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # J'ai supprimé les étapes "Setup Node" et "npm install"
+    # car c'est un site HTML simple sans fichier package.json.
+
+    # 2. Déployer directement les fichiers sur Azure
+    - name: 'Deploy to Azure Web App'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'KhallaouiApp'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .
