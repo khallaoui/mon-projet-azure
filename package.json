@@ -1,0 +1,13 @@
+
+{
+  "name": "khallaoui-app",
+  "version": "1.0.0",
+  "description": "Mon application Node.js sur Azure",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
