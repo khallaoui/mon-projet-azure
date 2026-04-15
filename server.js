@@ -56,3 +56,16 @@ app.listen(port, () => {
     console.log(`Port: ${port}`);
     console.log(`OS: ${os.type()}`);
 });
+
+// Route dans l'App 1 pour appeler l'App 2
+app.get('/test-microservice', async (req, res) => {
+    try {
+        const response = await axios.get('https://app2.azurewebsites.net/api/data');
+        res.json({
+            message: "App 1 a bien reçu les données !",
+            backend_response: response.data
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Connexion impossible" });
+    }
+});

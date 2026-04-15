@@ -1,15 +1,13 @@
-name: Deploiement Azure
+name: Deploy Node.js JSON Counter
 
 on:
   push:
     branches:
-      - main
-      - master
+      - master # Ou main selon ta branche par défaut
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -17,15 +15,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '22' # Version demandée dans ton TP
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
+
+      - name: Create Deployment Package
+        run: zip -r app.zip . # Méthode du TP
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'KhallaouiApp'
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: app.zip

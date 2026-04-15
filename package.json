@@ -1,14 +1,12 @@
 {
-  "name": "khallaoui-app-pro",
-  "version": "1.1.0",
-  "description": "Node.js Pro Test on Azure",
-  "main": "server.js",
+  "name": "json-counter",
+  "version": "1.0.0",
+  "description": "TP Counter Azure",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "axios": "^1.6.0",
-    "morgan": "^1.10.0"
+    "express": "^5.0.0"
   }
 }
